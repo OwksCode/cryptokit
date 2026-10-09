@@ -36,6 +36,11 @@ python cryptokit.py steg-reveal --image out.png
 python cryptokit.py steg-hide --image input.png --message "secret" --key "pass" --output out.png
 python cryptokit.py steg-reveal --image out.png --key "pass"
 
+# steganography + encryption (RSA before hiding)
+python cryptokit.py rsa-keygen
+python cryptokit.py steg-hide --image input.png --message "secret" --rsa-key rsa.pub --output out.png
+python cryptokit.py steg-reveal --image out.png --rsa-key rsa.priv
+
 # rsa
 python cryptokit.py rsa-keygen
 python cryptokit.py rsa-keygen --bits 32
