@@ -7,6 +7,9 @@ usage:
     python cryptokit.py vigenere --encrypt "msg" --key "secret"
     python cryptokit.py steg-hide --image in.png --message "msg" --output out.png
     python cryptokit.py steg-reveal --image out.png
+    python cryptokit.py rsa-keygen
+    python cryptokit.py rsa-encrypt --pubkey rsa.pub --message "hello"
+    python cryptokit.py rsa-decrypt --privkey rsa.priv --encrypted "123,456,789"
 """
 
 import argparse
@@ -45,12 +48,26 @@ def main():
     p_hide.add_argument("--image", required=True, help="path to the input image")
     p_hide.add_argument("--message", required=True, help="message to hide")
     p_hide.add_argument("--output", required=True, help="path for the output image")
-    p_hide.add_argument("--key", help="optional vigenere key to encrypt before hiding")
+    p_hide.add_argument("--key", help="vigenere key to encrypt before hiding")
 
     # steg reveal
     p_reveal = sub.add_parser("steg-reveal", help="extract a hidden message from a PNG image")
     p_reveal.add_argument("--image", required=True, help="path to the image")
-    p_reveal.add_argument("--key", help="optional vigenere key to decrypt after extracting")
+    p_reveal.add_argument("--key", help="vigenere key to decrypt after extracting")
+
+    # rsa keygen
+    p_rkg = sub.add_parser("rsa-keygen", help="generate an RSA key pair")
+    p_rkg.add_argument("--bits", type=int, default=16, help="bit length for prime generation")
+
+    # rsa encrypt
+    p_renc = sub.add_parser("rsa-encrypt", help="encrypt a message with RSA")
+    p_renc.add_argument("--message", required=True, help="message to encrypt")
+    p_renc.add_argument("--pubkey", required=True, help="path to the public key file")
+
+    # rsa decrypt
+    p_rdec = sub.add_parser("rsa-decrypt", help="decrypt a message with RSA")
+    p_rdec.add_argument("--encrypted", required=True, help="comma-separated encrypted integers")
+    p_rdec.add_argument("--privkey", required=True, help="path to the private key file")
 
     args = parser.parse_args()
 
@@ -103,6 +120,29 @@ def main():
             message = decrypt(message, args.key)
 
         print(message)
+
+    elif args.cmd == "rsa-keygen":
+        from crypto.rsa import keygen, save_keys
+
+        pub, priv = keygen(args.bits)
+        save_keys(pub, priv, "rsa.pub", "rsa.priv")
+        print("keys saved to rsa.pub and rsa.priv")
+
+    elif args.cmd == "rsa-encrypt":
+        from crypto.rsa import encrypt, load_key
+
+        key = load_key(args.pubkey)
+        pub = {"n": key["n"], "e": key["value"]}
+        encrypted = encrypt(args.message, pub)
+        print(",".join(str(x) for x in encrypted))
+
+    elif args.cmd == "rsa-decrypt":
+        from crypto.rsa import decrypt, load_key
+
+        key = load_key(args.privkey)
+        priv = {"n": key["n"], "d": key["value"]}
+        numbers = [int(x) for x in args.encrypted.split(",")]
+        print(decrypt(numbers, priv))
 
 
 if __name__ == "__main__":

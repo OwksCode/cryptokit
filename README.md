@@ -32,9 +32,15 @@ python cryptokit.py vigenere --decrypt "..." --key "password"
 python cryptokit.py steg-hide --image input.png --message "hidden msg" --output out.png
 python cryptokit.py steg-reveal --image out.png
 
+# steganography + encryption (vigenere before hiding)
+python cryptokit.py steg-hide --image input.png --message "secret" --key "pass" --output out.png
+python cryptokit.py steg-reveal --image out.png --key "pass"
+
 # rsa
 python cryptokit.py rsa-keygen
-python cryptokit.py rsa-encrypt --pubkey key.pub --message "hello"
+python cryptokit.py rsa-keygen --bits 32
+python cryptokit.py rsa-encrypt --pubkey rsa.pub --message "hello"
+python cryptokit.py rsa-decrypt --privkey rsa.priv --encrypted "2081,1351,977,977,2627"
 ```
 
 ## running tests
@@ -49,14 +55,16 @@ python -m pytest tests/ -v
 cryptokit/
 ├── cryptokit.py        # cli entry point
 ├── crypto/
-│   ├── caesar.py       # caesar cipher + cracking
+│   ├── caesar.py       # caesar cipher + frequency cracking
 │   ├── vigenere.py     # vigenere cipher
-│   ├── rsa.py          # rsa from scratch
-│   └── analysis.py     # frequency analysis helpers
+│   └── rsa.py          # rsa from scratch
 ├── steg/
 │   └── lsb.py          # least significant bit steganography
 └── tests/
-    └── test_caesar.py
+    ├── test_caesar.py
+    ├── test_vigenere.py
+    ├── test_steg.py
+    └── test_rsa.py
 ```
 
 ## license
