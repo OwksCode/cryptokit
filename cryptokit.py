@@ -49,11 +49,13 @@ def main():
     p_hide.add_argument("--message", required=True, help="message to hide")
     p_hide.add_argument("--output", required=True, help="path for the output image")
     p_hide.add_argument("--key", help="vigenere key to encrypt before hiding")
+    p_hide.add_argument("--rsa-key", help="path to RSA public key for encryption")
 
     # steg reveal
     p_reveal = sub.add_parser("steg-reveal", help="extract a hidden message from a PNG image")
     p_reveal.add_argument("--image", required=True, help="path to the image")
     p_reveal.add_argument("--key", help="vigenere key to decrypt after extracting")
+    p_reveal.add_argument("--rsa-key", help="path to RSA private key for decryption")
 
     # rsa keygen
     p_rkg = sub.add_parser("rsa-keygen", help="generate an RSA key pair")
@@ -107,6 +109,12 @@ def main():
         if args.key:
             from crypto.vigenere import encrypt
             message = encrypt(message, args.key)
+        elif args.rsa_key:
+            from crypto.rsa import encrypt, load_key
+            key = load_key(args.rsa_key)
+            pub = {"n": key["n"], "e": key["value"]}
+            encrypted = encrypt(message, pub)
+            message = ",".join(str(x) for x in encrypted)
 
         hide(args.image, message, args.output)
         print(f"message hidden in {args.output}")
@@ -118,6 +126,12 @@ def main():
         if args.key:
             from crypto.vigenere import decrypt
             message = decrypt(message, args.key)
+        elif args.rsa_key:
+            from crypto.rsa import decrypt, load_key
+            key = load_key(args.rsa_key)
+            priv = {"n": key["n"], "d": key["value"]}
+            numbers = [int(x) for x in message.split(",")]
+            message = decrypt(numbers, priv)
 
         print(message)
 
