@@ -2,6 +2,8 @@
 
 CLI tool for classical cryptography and image steganography, built from scratch in Python. No external crypto libs — everything is hand-rolled.
 
+![tests](https://github.com/OwksCode/nbody/actions/workflows/tests.yml/badge.svg)
+
 ## what it does
 
 - **Caesar & Vigenère ciphers** — encrypt, decrypt them and crack Caesar with frequency analysis
