@@ -4,7 +4,7 @@ CLI tool for classical cryptography and image steganography, built from scratch 
 
 ## what it does
 
-- **Caesar & Vigenère ciphers** — encrypt, decrypt them and crack Caesar them with frequency analysis
+- **Caesar & Vigenère ciphers** — encrypt, decrypt them and crack Caesar with frequency analysis
 - **LSB steganography** — hide text messages inside PNG images
 - **RSA from scratch** — key generation, encrypt/decrypt using raw modular arithmetic
 
