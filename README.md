@@ -8,6 +8,8 @@ CLI tool for classical cryptography and image steganography, built from scratch 
 - **LSB steganography** — hide text messages inside PNG images
 - **RSA from scratch** — key generation, encrypt/decrypt using raw modular arithmetic
 
+<img width="1204" height="317" alt="cryptokit-demo" src="https://github.com/user-attachments/assets/d0dc74e5-c6a8-4f96-a1d3-80b8b3a34560" />
+
 ## setup
 
 ```bash
