@@ -72,6 +72,15 @@ cryptokit/
     └── test_rsa.py
 ```
 
+## security notes
+
+This is an educational project: don't use it to protect real data.
+
+- **Textbook RSA, one character at a time, no padding.** Encryption is deterministic, so anyone with the public key can encrypt every possible character, build a lookup table and decrypt without the private key. Real-world RSA uses OAEP padding.
+- **Tiny keys.** Primality is tested by trial division, which only works for small primes (16 bits by default), so the modulus can be factored instantly.
+- **`random` is not a CSPRNG.** Key generation should use `secrets`.
+- **LSB steganography is detectable** with statistical steganalysis and doesn't survive lossy compression (JPEG).
+
 ## license
 
 MIT
